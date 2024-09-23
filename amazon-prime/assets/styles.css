@@ -24,7 +24,6 @@ body {
     justify-content: center;
     align-items: center;
     margin-bottom: 90px;
-
 }
 
 .logos img {
@@ -64,9 +63,9 @@ main p {
 
 .cta-button {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 12px 80px;
     border: 0;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     color: #1a1a1a;
     background-color: white;
     text-decoration: none;
@@ -81,18 +80,30 @@ main p {
 .cta-button:hover {
     background-color: #e0e0e0;
 }
+
+/* Footer */
 footer{
     margin-top: 80px;
 }
+.iconos-amazon{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 35px;
+    margin-bottom: 30px;
+    margin-top: 120px;
+}
+.iconos-amazon img{
+    width: 60px;
+}
 
 footer p{
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 300;
     margin: 0;
 }
-footer p:nth-child(3){
-    margin-top: 20px;
-}
+
 
 /* Media Queries para pantallas pequeñas */
 @media (max-width: 480px) {
@@ -101,6 +112,7 @@ footer p:nth-child(3){
     }
     .logos{
         margin-bottom: 50px;
+        flex-direction: column-reverse;
     }
     h1 {
         font-size: 1.6rem;
@@ -121,10 +133,34 @@ footer p:nth-child(3){
 
     .cta-button {
         font-size: 1.4rem;
+        padding: 10px 20px;
     }
 
     .logo-mega {
-        display: none;
+        border: none;
+        margin-top: 30px;
+        max-width: 65%;
+    }
+
+    
+    .logo-mega::before {
+        content: "";
+        position: absolute;
+        top:120px; 
+        left: 50%; 
+        transform: translateX(-50%);
+        width: 20%; 
+        border-top: 1px solid #fff; 
+      }
+
+      .logo-amazon img{
+        max-width: 70%;
+    }
+    .iconos-amazon{
+        gap: 10px;
+    }
+    .iconos-amazon img{
+        width: 55px;
     }
 
     footer{

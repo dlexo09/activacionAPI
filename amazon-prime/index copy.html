@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en-MX">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activación - Amazon Prime</title>
+
+    <link rel="icon" href="assets/img/mega-icon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
+
+</head>
+
+<body>
+    <div class="container">
+        <!-- Logotipos -->
+        <header class="logos">
+            <div class="logo-mega">
+                <img src="assets/img/mega-logo.png" alt="Logo MEGA">
+            </div>
+
+            <div class="logo-amazon">
+                <img src="assets/img/amazon_prime-logo.png" alt="Logo Amazon Prime">
+            </div>
+        </header>
+
+        <!-- Contenido principal -->
+        <main>
+            <h2>¡FELICIDADES!</h2>
+            <h1>ACTIVASTE <span>AMAZON PRIME</span> CON MEGA</h1>
+            <p>Regístrate en Amazon para disfrutar de los beneficios de tu membresía.</p>
+
+            <!-- Botón que se activará si el token es válido -->
+            <button class="cta-button" id="sendRequest">ACTIVA TU CUENTA</button>
+            <p id="pToken"></p>
+            
+        </main>
+
+        <!-- Recordatorios -->
+        <footer>
+            <p>Recuerda:</p>
+            <p>Si ya tienes cuenta de Amazon Prime, confirma que no tengas ningún método de pago activo, de lo
+                contrario, deberás darlo de baja directamente con Amazon y una vez que concluya tu ciclo actual podrás
+                activar tu cuenta con Mega.</p>
+            <p>Si aún no tienes cuenta de Amazon Prime, registra un nuevo correo y contraseña y esa será tu cuenta de
+                Amazon Prime, debes verificarla colocando el código que recibiste por correo y da click en "Crea tu
+                cuenta de Amazon".</p>
+        </footer>
+    </div>
+
+<script>
+    // Obtener los parámetros de la URL
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+
+    document.getElementById('sendRequest').addEventListener('click', function() {
+    const token = params.get('token');
+
+        if (!token) {
+            alert('Token no encontrado');
+            return;
+        }
+
+        // La URL a la que se enviará la solicitud
+        const url = `https://tkn-act.megacable.com.mx:8238/api/token/${token}`;
+        
+        // La autenticación básica
+        const auth = 'bWVnYU1LVDpFN0FDNkIyMUUwMUE0QkY=';
+
+        // Configuración de la solicitud
+        fetch(url, {
+            method: 'GET', 
+            headers: {
+                'Authorization': `Basic ${auth}`,
+                'Access-Control-Allow-Origin': 'https://megacable.com.mx'
+
+               
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Manejo de la respuesta
+            console.log('Respuesta recibida:', data);
+            // Opcional: Redirigir después de la activación exitosa
+            if (data.status == 'SUCCESS') {
+                console.log('Token válido');
+                //window.location.href = "https://www.amazon.com/prime";//si el token responde success
+            }else{
+                window.location.href = "https://megacable.com.mx/activa-amazon";//si el token esta caducado
+            }
+        })
+        .catch(error => {
+            // Manejo de errores
+            console.error('Error:', error);
+        });
+    });
+</script>
+</body>
+
+</html>

@@ -30,8 +30,8 @@
         <!-- Contenido principal -->
         <main>
             <h2>¡FELICIDADES!</h2>
-            <h1>ACTIVASTE <span>AMAZON PRIME</span> CON MEGA</h1>
-            <p>Regístrate en Amazon para disfrutar de los beneficios de tu membresía.</p>
+            <h1>Ahora cuentas con Amazon Prime a través de MEGA</h1>
+            <p>Activa tu cuenta Amazon Prime y <br> comienza a disfrutar de sus beneficios.</p>
 
             <!-- Botón que se activará si el token es válido -->
             <button class="cta-button" id="sendRequest">ACTIVA TU CUENTA</button>
@@ -41,57 +41,106 @@
 
         <!-- Recordatorios -->
         <footer>
+            <div class="iconos-amazon">
+                <img src="assets/img/amazon-prime.png" alt="Amazon Prime">
+                <img src="assets/img/amazon-compras.png" alt="Amazon Compras">
+                <img src="assets/img/amazon-music.png" alt="Amazon Music">
+                <img src="assets/img/rappi-pro.png" alt="Rappi Pro">
+            </div>
             <p>Recuerda:</p>
-            <p>Si ya tienes cuenta de Amazon Prime, confirma que no tengas ningún método de pago activo, de lo
-                contrario, deberás darlo de baja directamente con Amazon y una vez que concluya tu ciclo actual podrás
-                activar tu cuenta con Mega.</p>
-            <p>Si aún no tienes cuenta de Amazon Prime, registra un nuevo correo y contraseña y esa será tu cuenta de
-                Amazon Prime, debes verificarla colocando el código que recibiste por correo y da click en "Crea tu
-                cuenta de Amazon".</p>
+            <p>Si ya tienes cuenta de Amazon Prime, confirma que no tengas ningún método de pago activo, de lo contrario, deberás darlo de baja directamente con Amazon y una vez que concluya tu ciclo actual podrás activar tu cuenta con Mega. Si aún no tienes cuenta de Amazon Prime, registra un nuevo correo y contraseña y esa será tu cuenta de Amazon Prime, debes verificarla colocando el código que recibiste por correo y da click en “Crea tu cuenta de Amazon”</p>
         </footer>
     </div>
 
-<script>
-    // Obtener los parámetros de la URL
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
-
-    document.getElementById('sendRequest').addEventListener('click', function() {
-        if (!token) {
-            alert('Token no encontrado');
-            return;
-        }
-
-        // La URL a la que se enviará la solicitud
-        const url = `https://tkn-act.megacable.com.mx:8238/api/token/${token}`;
-        
-        // La autenticación básica
-        const auth = 'bWVnYU1LVDpFN0FDNkIyMUUwMUE0QkY=';
-
-        // Configuración de la solicitud
-        fetch(url, {
-            method: 'GET', 
-            headers: {
-                'Authorization': `Basic ${auth}`,
-                'Content-Type': 'application/json',
-                'X-Auth-Token': token
+    <script>
+        // Obtener los parámetros de la URL
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+    
+        document.getElementById('sendRequest').addEventListener('click', function() {
+            if (!token) {
+                alert('Token no encontrado');
+                return;
             }
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Manejo de la respuesta
-            console.log('Respuesta recibida:', data);
-            // Opcional: Redirigir después de la activación exitosa
-            if (data.success) {
-                window.location.href = "https://www.amazon.com/prime";
-            }
-        })
-        .catch(error => {
-            // Manejo de errores
-            console.error('Error:', error);
+    
+            // La URL a la que se enviará la solicitud
+            const url = `https://tkn-act.megacable.com.mx:8238/api/token/${token}`;
+            
+            // La autenticación
+            const auth = 'bWVnYU1LVDpFN0FDNkIyMUUwMUE0QkY=';
+    
+            // Configuración de la solicitud
+            fetch(url, {
+                method: 'GET', 
+                headers: {
+                    'Authorization': `Basic ${auth}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Manejo de la respuesta
+                console.log('Respuesta recibida:', data);
+                // Validar si el token es válido
+                if (data.status == 'SUCCESS') {
+                    const result = data.result[0]; // Acceder al primer elemento del array result
+                    //console.log('Token válido ' + result.branch + ' ' + result.subscriber);
+                    const sucursal = result.branch; // Usar valor por defecto si no está presente
+                    const suscriptor = result.subscriber; // Usar valor por defecto si no está presente
+                    const postUrl = 'https://inn-sfyc-online-web-sys-api.mega-mule.mx/sfyc_online_web/api/web/getTokenAmazon2';
+                    //console.log('Variable ' + sucursal + ' ' + suscriptor);
+                    
+                    tocken2();
+                } else {
+                    // Redirigir si el token está caducado
+                    console.log('Token caducado o inválido');
+                    window.location.href = "https://megacable.com.mx/activa-amazon";
+                }
+            })
+            .catch(error => {
+                // Manejo de errores
+                console.error('Error:', error);
+            });
         });
-    });
-</script>
-</body>
 
-</html>
+
+             // Función tocken2
+    function tocken2() {
+        const postUrl = 'https://inn-sfyc-online-web-sys-api.mega-mule.mx/sfyc_online_web/api/web/getTokenAmazon2';
+        const sucursal = '226';
+        const suscriptor = '104874';
+        console.log('tocken2');
+         fetch(postUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'g49O1a0kcjiMK0'
+                        },
+                        body: JSON.stringify({
+                            sucursal: sucursal,
+                            suscriptor: suscriptor
+                        })
+                    })
+                    .then(postResponse => {
+                    console.log('Estado de la respuesta del POST:', postResponse.status);
+                    return postResponse.json();
+                    })
+                    .then(postData => {
+                        console.log('Respuesta del POST:', postData);
+                        // Validar si el errorCode es ACTIVADO
+                        if (postData.errorCode === 'ACTIVADO') {
+                            // Redirigir a la URL proporcionada
+                            console.log('Redirigiendo a:', postData.url);
+                            window.location.href = postData.url;
+                        } else {
+                            console.error('Error en la generación del token:', postData);
+                            window.location.href = "https://megacable.com.mx/activa-amazon";
+                        }
+                    })
+                    .catch(postError => {
+                        console.error('Error en el POST:', postError);
+                    });
+
+    }
+    </script>
+    </body>
+    </html>
