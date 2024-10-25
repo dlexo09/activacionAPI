@@ -68,9 +68,9 @@ main p {
 
 .cta-button {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 12px 80px;
     border: 0;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     color: #1a1a1a;
     background-color: white;
     text-decoration: none;
@@ -88,15 +88,28 @@ main p {
 footer{
     margin-top: 80px;
 }
+.iconos-disney{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.iconos-disney-movil{
+    display: none;
+}
+.iconos-disney img{
+        width: 75%;
+        margin-bottom: 30px;
+        margin-top: 50px;
+}
 
 footer p{
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 300;
     margin: 0;
 }
-footer p:nth-child(3){
-    margin-top: 20px;
-}
+
 
 /* Media Queries para pantallas pequeñas */
 @media (max-width: 480px) {
@@ -127,6 +140,7 @@ footer p:nth-child(3){
 
     .cta-button {
         font-size: 1.4rem;
+        padding: 10px 20px;
     }
     .logo-mega{
         border: none;
@@ -145,6 +159,18 @@ footer p:nth-child(3){
       
     .logo-disney img{
         max-width: 70%;
+    }
+    .iconos-disney{
+        display: none;
+    }
+    .iconos-disney-movil{
+        display: flex;
+        justify-content: center;
+        margin-bottom: 25px;
+        margin-top: 120px;
+    }
+    .iconos-disney-movil img{
+        width: 85%;
     }
 
     footer{

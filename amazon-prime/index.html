@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-MX">
+<html lang="es-MX">
 
 <head>
     <meta charset="UTF-8">
@@ -83,13 +83,10 @@
                 // Validar si el token es válido
                 if (data.status == 'SUCCESS') {
                     const result = data.result[0]; // Acceder al primer elemento del array result
-                    //console.log('Token válido ' + result.branch + ' ' + result.subscriber);
+                    console.log('Token válido ' + result.branch + ' ' + result.subscriber);
                     const sucursal = result.branch; // Usar valor por defecto si no está presente
                     const suscriptor = result.subscriber; // Usar valor por defecto si no está presente
-                    const postUrl = 'https://inn-sfyc-online-web-sys-api.mega-mule.mx/sfyc_online_web/api/web/getTokenAmazon2';
-                    //console.log('Variable ' + sucursal + ' ' + suscriptor);
-                    
-                    tocken2();
+                    tocken2(sucursal, suscriptor);
                 } else {
                     // Redirigir si el token está caducado
                     console.log('Token caducado o inválido');
@@ -101,45 +98,52 @@
                 console.error('Error:', error);
             });
         });
+    
+        // Función tocken2
+        function tocken2(sucursal, suscriptor) {
+            let suc = '' + sucursal;
+            let sus = '' + suscriptor;
+            console.log('token 2 sucursal: ' + sucursal + ' suscriptor: ' + suscriptor);
 
+            const myHeaders = new Headers();
+            myHeaders.append("Authorization", "g49O1a0kcjiMK0");
+            myHeaders.append("Content-Type", "application/json");
 
-             // Función tocken2
-    function tocken2() {
-        const postUrl = 'https://inn-sfyc-online-web-sys-api.mega-mule.mx/sfyc_online_web/api/web/getTokenAmazon2';
-        const sucursal = '226';
-        const suscriptor = '104874';
-        console.log('tocken2');
-         fetch(postUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'g49O1a0kcjiMK0'
-                        },
-                        body: JSON.stringify({
-                            sucursal: sucursal,
-                            suscriptor: suscriptor
-                        })
-                    })
-                    .then(postResponse => {
-                    console.log('Estado de la respuesta del POST:', postResponse.status);
-                    return postResponse.json();
-                    })
-                    .then(postData => {
-                        console.log('Respuesta del POST:', postData);
-                        // Validar si el errorCode es ACTIVADO
-                        if (postData.errorCode === 'ACTIVADO') {
-                            // Redirigir a la URL proporcionada
-                            console.log('Redirigiendo a:', postData.url);
-                            window.location.href = postData.url;
-                        } else {
-                            console.error('Error en la generación del token:', postData);
-                            window.location.href = "https://megacable.com.mx/activa-amazon";
-                        }
-                    })
-                    .catch(postError => {
-                        console.error('Error en el POST:', postError);
-                    });
+            const raw = JSON.stringify({
+                "sucursal": suc,
+                "suscriptor": sus
+            });
 
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+
+        fetch("https://inn-sfyc-online-web-sys-api.mega-mule.mx/sfyc_online_web/api/web/getTokenAmazon2", requestOptions)
+            .then((response) => {
+                console.log('Estado de la respuesta del POST:', response.status);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((postData) => {
+                console.log('Respuesta del POST:', postData);
+                // Validar si el errorCode es ACTIVADO o TOKEN_GENERADO
+                if (postData.errorCode === 'ACTIVADO' || postData.errorCode === 'TOKEN_GENERADO') {
+                    // Redirigir a la URL proporcionada
+                    console.log('Redirigiendo a:', postData.url);
+                    window.location.href = postData.url;
+                } else {
+                    console.error('Error en la generación del token:', postData);
+                    window.location.href = "https://megacable.com.mx/activa-amazon";
+                }
+            })
+            .catch((postError) => {
+                console.error('Error en el POST:', postError);
+            });
     }
     </script>
     </body>
