@@ -134,10 +134,12 @@
             .then((postData) => {
                 console.log('Respuesta del POST:', postData);
                 // Validar si el errorCode es ACTIVADO o TOKEN_GENERADO
-                if (postData.errorCode == 'ACTIVADO' || postData.errorCode == 'TOKEN_GENERADO') {
+                const data = postData.data;
+                if ( (data.status === 'true') && data.url && data.token) {
                     // Redirigir a la URL proporcionada
-                    console.log('Redirigiendo a:', postData.url);
-                    window.location.href = postData.url;
+                    const fullUrl = data.url + data.token;
+                    console.log('Redirigiendo a:', fullUrl);
+                    window.location.href = fullUrl;
                 } else {
                     console.error('Error en la generación del token:', postData);
                     window.location.href = "https://megacable.com.mx/activa-netflix";
